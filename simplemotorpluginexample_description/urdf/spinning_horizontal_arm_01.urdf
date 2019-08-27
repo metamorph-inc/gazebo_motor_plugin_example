@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<robot name="spinning_horizantal_arm">
+
+<!-- Link definitions -->
+
+  <link name="world"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1.0 1.0 1.0"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+    </collision>
+    <inertial>
+      <mass value="100.0"/>
+      <inertia ixx="16.6666667" iyy="16.6666667" izz="16.6666667"
+               ixy="0.0" ixz="0.0" iyz="0.0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+    </inertial>
+  </link>
+
+  <link name="arm_link">
+    <visual>
+      <geometry>
+        <cylinder length="2.0" radius="0.1"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+      <origin rpy="1.570796 0 0" xyz="0 1 0.1"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="2.0" radius="0.1"/>
+      </geometry>
+      <origin rpy="1.570796 0 0" xyz="0 1 0.1"/>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.6666667" iyy="0.0" izz="0.6666667"
+               ixy="0.0" ixz="0.0" iyz="0.0"/>
+      <origin rpy="1.570796 0 0" xyz="0 1 0.1"/>
+    </inertial>
+  </link>
+
+<!-- Joint definitions -->
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
+  <joint name="arm_joint" type="continuous">
+    <axis xyz="0 0 1"/>
+    <parent link="base_link"/>
+    <child link="arm_link"/>
+    <origin rpy="0 0 0" xyz="0 0 1"/>
+    <dynamics friction="0.01"/>
+  </joint>
+
+<!-- Gazebo definitions - only used in Gazebo simulation -->
+
+  <gazebo reference="base_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="arm_link">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="simple_motor_plugin"
+            filename="libsimple_motor_plugin.so">
+      <actuator>arm_joint</actuator>
+      <velocity>25</velocity>
+    </plugin>
+  </gazebo>
+
+</robot>
